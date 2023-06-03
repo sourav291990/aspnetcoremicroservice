@@ -9,9 +9,9 @@ namespace Catalog.API.Data
         public CatalogContext(IConfiguration configuration)
         {
             _configuration = configuration;
-            var mongoClient = new MongoClient(_configuration.GetValue<string>("ProductDBSettings.ProductDBConnectionString"));
-            var mongoDB = mongoClient.GetDatabase(_configuration.GetValue<string>("ProductDBSettings.ProductDBName"));
-            Products = mongoDB.GetCollection<Product>(_configuration.GetValue<string>("ProductDBSettings.ProductDBCollectionName"));
+            var mongoClient = new MongoClient(_configuration.GetSection("ProductDBSettings.ProductDBConnectionString").Value);
+            var mongoDB = mongoClient.GetDatabase(_configuration.GetSection("ProductDBSettings.ProductDBName").Value);
+            Products = mongoDB.GetCollection<Product>(_configuration.GetSection("ProductDBSettings.ProductDBCollectionName").Value);
             CatalogContextSeed.SeedData(Products);
         }
         public IMongoCollection<Product> Products { get; }
