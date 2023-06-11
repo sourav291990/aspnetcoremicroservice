@@ -1,10 +1,14 @@
+using Catalog.API.ConfigurationSettings;
 using Catalog.API.Data;
 using Catalog.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<ProductDbConfigurationSettings>(builder.Configuration.GetSection("ProductDbConfigurationSettings"));
+
 
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(option =>
@@ -17,6 +21,7 @@ builder.Services.AddApiVersioning(option =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<IMongoClient, MongoClient>();
 builder.Services.AddScoped<ICatalogContext, CatalogContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 

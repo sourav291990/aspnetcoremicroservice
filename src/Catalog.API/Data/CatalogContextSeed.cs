@@ -14,6 +14,7 @@ namespace Catalog.API.Data
             }
         }
 
+
         private static List<Product> GetPreConfiguredProduct()
         {
             return new List<Product>() {
