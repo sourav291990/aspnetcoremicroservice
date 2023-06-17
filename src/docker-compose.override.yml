@@ -9,11 +9,16 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379"
+
   catalog.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ProductDbConfigurationSettings:ProductDBConnectionString=mongodb://catalogdb:27017"
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
       - "8001:80"
     depends_on:
@@ -22,3 +27,14 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "RedisCacheConnection:basketdb:6379"
+    ports:
+      - "8002:80"
+    depends_on:
+      - basketdb
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

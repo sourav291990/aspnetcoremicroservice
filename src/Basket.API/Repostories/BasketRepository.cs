@@ -21,13 +21,18 @@ namespace Basket.API.Repostories
 
         public async Task<ShoppingCart> GetShoppingCart(string userName)
         {
-            var shoppingCart = await _redisCache.GetStringAsync(userName);
-            if (shoppingCart == null)
+            ShoppingCart shoppingCart = new ShoppingCart
             {
-                return null;
+                UserName = userName,
+                Items = new List<ShoppingCartItem>()
+            };
+            var shoppingCarttems = await _redisCache.GetStringAsync(userName);
+            if (null != shoppingCarttems && !string.IsNullOrEmpty(shoppingCarttems))
+            {
+                shoppingCart.Items = JsonConvert.DeserializeObject<List<ShoppingCartItem>>(shoppingCarttems);
             }
 
-            return JsonConvert.DeserializeObject<ShoppingCart>(shoppingCart);
+            return shoppingCart;
         }
 
         public async Task<ShoppingCart> UpdateShoppingCart(ShoppingCart shoppingCart)
