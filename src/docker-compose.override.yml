@@ -49,6 +49,7 @@ services:
       - "portainer_data:/data"
 
   catalog.api:
+    container_name: catalog.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ProductDbConfigurationSettings:ProductDBConnectionString=mongodb://catalogdb:27017"
@@ -61,9 +62,11 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     
   basket.api:
+    container_name: basket.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "RedisCacheConnection:basketdb:6379"
+      - "GrpcSettings:GrpcAddress:http://discount.grpc"
     ports:
       - "8002:80"
     depends_on:
@@ -73,6 +76,7 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   discount.api:
+    container_name: discount.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:DiscoutDBConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=admin1234;"
@@ -80,6 +84,19 @@ services:
       - discountdb
     ports:
       - "8003:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  discount.grpc:
+    container_name: discount.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DiscoutDBConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=admin1234;"
+    ports:
+      - "8004:80"
+    depends_on:
+      - discountdb
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
