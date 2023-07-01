@@ -1,5 +1,5 @@
 # aspnetcoremicroservice
-Asp.NET Core Microservice
+Sample Asp.NET Core Microservice project for online shopping tools
 
 There are 4 microservices
 1. Basket Microservice using ASP.NET core with Redis Cache
