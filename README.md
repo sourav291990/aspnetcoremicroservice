@@ -25,7 +25,7 @@ There are 4 microservices
    3.3 Repository Pattern
 
    3.4 Docker Orchestration Support
-5. Discount GRPC Service using ASP.NET core gRPC and PostreSQL
+5. Discount GRPC Service using ASP.NET core gRPC and PostgreSQL
 6. Order Microservice
    
    4.1.  Asp.NET core using Clean Architecture
