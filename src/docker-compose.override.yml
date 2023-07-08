@@ -38,6 +38,22 @@ services:
     volumes:
       - "pgadmin_data:/var/lib/pgadmin"
 
+  orderdb:
+    container_name: orderdb
+    restart: always
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Swn12345678"
+      ACCEPT_EULA: "Y"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   portainer:
     container_name: portainer
     restart: always
@@ -67,10 +83,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "RedisCacheConnection:basketdb:6379"
       - "GrpcSettings:GrpcAddress:http://discount.grpc"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
     ports:
       - "8002:80"
     depends_on:
       - basketdb
+      - rabbitmq
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -97,6 +115,21 @@ services:
       - "8004:80"
     depends_on:
       - discountdb
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=SwN12345678"  
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    depends_on:
+        - orderdb
+        - rabbitmq
+    ports:
+      - "8005:80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

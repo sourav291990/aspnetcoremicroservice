@@ -1,6 +1,7 @@
 using Basket.API.Repostories;
 using Basket.API.Services;
 using Discount.GRPC.Protos;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,13 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
 builder.Services.AddScoped<DiscountGRPCService>();
 // Registering GRPC related services ends here
 
+builder.Services.AddMassTransit(config =>
+{
+    config.UsingRabbitMq((ctx, cfg) =>
+    {
+        cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+    });
+}).AddMassTransitHostedService();
 
 var app = builder.Build();
 
