@@ -13,10 +13,20 @@ There are 4 microservices
    1.4 Consuming Remote Procedure Call(gRPC) of discout service
 
    1.5 Publishing event to RabbitMQ
+
+   1.6 Docker Orchestration Support
    
 3. Catalog Microservice using ASP.NET core with MongoDB
-4. Discount GRPC Service using ASP.NET core gRPC and PostreSQL
-5. Order Microservice
+
+   3.1 ASP.NET Core Web API
+
+   3.2 Mongo DB for storage
+
+   3.3 Repository Pattern
+
+   3.4 Docker Orchestration Support
+5. Discount GRPC Service using ASP.NET core gRPC and PostreSQL
+6. Order Microservice
    
    4.1.  Asp.NET core using Clean Architecture
    
